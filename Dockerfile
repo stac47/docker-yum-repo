@@ -1,5 +1,7 @@
 # build stage
-FROM golang:1.14.1 as builder
+ARG REGISTRY_PREFIX
+ARG GOLANG_VERSION=latest
+FROM ${REGISTRY_PREFIX}golang:${GOLANG_VERSION} as builder
 
 WORKDIR /go/src/github.com/dgutierrez1287/docker-yum-repo
 
