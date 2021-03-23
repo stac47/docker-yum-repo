@@ -4,20 +4,15 @@ ARG GOLANG_VERSION=latest
 ARG CENTOS_VERSION=7
 FROM ${REGISTRY_PREFIX}golang:${GOLANG_VERSION} as builder
 
-WORKDIR /go/src/github.com/dgutierrez1287/docker-yum-repo
+ADD src/* /repo-scanner/
 
-RUN go get -d -v github.com/Sirupsen/logrus && \
-    go get -d -v github.com/rjeczalik/notify && \
-    go get -d -v gopkg.in/dickeyxxx/golock.v1 && \
-    go get -d -v gopkg.in/natefinch/lumberjack.v2
+WORKDIR /repo-scanner
 
-COPY src/*.go .
-
-RUN GOOS=linux go build -x -o repoScanner .
+RUN go build -o repoScanner
 
 # application image
 FROM ${REGISTRY_PREFIX}centos:${CENTOS_VERSION}
-LABEL maintainer="Diego Gutierrez <dgutierrez1287@gmail.com>"
+LABEL maintainer="Laurent Stacul<laurent.stacul@gmail.com>"
 
 RUN yum -y install epel-release && \
     yum -y update && \
@@ -27,7 +22,7 @@ RUN yum -y install epel-release && \
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
-COPY --from=builder /go/src/github.com/dgutierrez1287/docker-yum-repo/repoScanner /root/
+COPY --from=builder /repo-scanner/repoScanner /root/
 
 RUN chmod 700 /root/repoScanner
 

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/rjeczalik/notify"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/dickeyxxx/golock.v1"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
